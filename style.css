@@ -1,0 +1,327 @@
+* {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121214;
+            color: #e1e1e6;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header / Toolbar */
+        header {
+            height: 60px;
+            background: #1e1e24;
+            border-bottom: 1px solid #2d2d38;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .tool-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn {
+            background: #2b2b36;
+            color: #fff;
+            border: 1px solid #3f3f50;
+            padding: 7px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: #3b3b4a;
+            border-color: #00e676;
+            color: #00e676;
+        }
+
+        .btn-primary {
+            background: #00e676;
+            color: #121214;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #00c853;
+            color: #121214;
+            box-shadow: 0 0 10px rgba(0, 230, 118, 0.4);
+        }
+
+        .btn-toggle {
+            background: #2b2b36;
+            border: 1px solid #3f3f50;
+        }
+
+        .btn-toggle.active {
+            background: rgba(0, 230, 118, 0.2);
+            border-color: #00e676;
+            color: #00e676;
+        }
+
+        /* Nút Hướng dẫn nhỏ gọn ở góc trên bên phải */
+        .btn-help {
+            background: transparent;
+            color: #888899;
+            border: 1px solid #3f3f50;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .btn-help:hover {
+            color: #00e676;
+            border-color: #00e676;
+            opacity: 1;
+            box-shadow: 0 0 8px rgba(0, 230, 118, 0.3);
+        }
+
+        label.btn { margin-bottom: 0; }
+        input[type="file"] { display: none; }
+
+        .control-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            background: #16161a;
+            padding: 5px 10px;
+            border-radius: 6px;
+            border: 1px solid #2d2d38;
+        }
+
+        select, input[type="range"] {
+            background: #2b2b36;
+            color: #fff;
+            border: 1px solid #3f3f50;
+            border-radius: 4px;
+            padding: 4px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type="range"] {
+            accent-color: #00e676;
+            width: 90px;
+        }
+
+        /* Workspace */
+        #workspace {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background-color: #1a1a20;
+            background-image: 
+                linear-gradient(45deg, #252530 25%, transparent 25%), 
+                linear-gradient(-45deg, #252530 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #252530 75%), 
+                linear-gradient(-45deg, transparent 75%, #252530 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            cursor: crosshair;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            transform-origin: center center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.7);
+        }
+
+        canvas { display: block; }
+
+        #upload-prompt {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(30, 30, 36, 0.95);
+            padding: 40px 60px;
+            border-radius: 12px;
+            border: 2px dashed #00e676;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        #upload-prompt h2 { margin-bottom: 10px; color: #00e676; }
+
+        /* Cursor Preview Fix Centered */
+        #cursor-preview {
+            position: fixed;
+            pointer-events: none;
+            border: 1.5px solid #00e676;
+            background: rgba(0, 230, 118, 0.15);
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 99;
+        }
+
+        .info-bar {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .magic-active {
+            color: #00e676 !important;
+            font-weight: bold;
+        }
+
+        /* Modal Hướng Dẫn */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: #1e1e24;
+            border: 1px solid #3f3f50;
+            width: 600px;
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2d2d38;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
+
+        .modal-header h3 {
+            color: #00e676;
+            font-size: 18px;
+        }
+
+        /* Nút Tắt Modal có Hover Siêu Mượt */
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: #888;
+            font-size: 22px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .close-btn:hover {
+            color: #00e676;
+            background: rgba(0, 230, 118, 0.15);
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .modal-body {
+            overflow-y: auto;
+            padding-right: 10px;
+            font-size: 13.5px;
+            line-height: 1.6;
+            color: #ccc;
+        }
+
+        .modal-body::-webkit-scrollbar { width: 6px; }
+        .modal-body::-webkit-scrollbar-thumb { background: #3f3f50; border-radius: 3px; }
+
+        .guide-section {
+            margin-bottom: 18px;
+        }
+
+        .guide-section h4 {
+            color: #fff;
+            margin-bottom: 6px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .kbd-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        kbd {
+            background: #2b2b36;
+            border: 1px solid #3f3f50;
+            color: #00e676;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        /* Áp dụng chung cho các nút và khung trên thanh công cụ */
+        guide-section button, 
+        guide-section select, 
+        guide-section .tool-item {
+            height: 36px !important;       /* Ép tất cả có chung chiều cao */
+            padding: 0 10px !important;    /* Giảm padding ngang cho gọn */
+            font-size: 13px !important;    /* Thu nhỏ chữ lại cho đỡ thô */
+            box-sizing: border-box;
+        }
+
+/* Ép các nút vuông/icon (như nút thư mục) có chiều rộng bằng chiều cao */
+        guide-section button.icon-btn {
+            width: 36px !important;
+            padding: 0 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
